@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <style>
+            *{
+                margin: 0;
+                padding: 0;
+            }
+            #map {
+                height: 500px;
+                width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+
+<div id = "map"></div>
+<script>
+ function initMap() {
+
+// Make a request to the /locations endpoint on the API
+// parse the response object and use it to place a marker
+// on the map
+var xhr = new XMLHttpRequest();
+xhr.open('GET', 'http://127.0.0.1:5001/api/locations/', true);
+
+xhr.onload = function () {
+  if (xhr.status >= 200 && xhr.status < 300) {
+
+    var response = JSON.parse(xhr.responseText);
+
+        var location = {lat: response.lat, lng: response.lng};
+        var map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 4,
+            center: location
+        });
+
+        var marker = new google.maps.Marker({
+            position: location,
+            map: map
+        });
+
+  } else {
+    console.error('Failed to fetch locations from flask app:', xhr.status);
+  }
+};
+
+xhr.onerror = function () {
+  console.error('Request failed');
+};
+
+xhr.send();
+};
+
+      
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDTFgP3BNapogqX1Lb0dait8AtMOVe24po&callback=initMap"></script>
+
+    </body>
+
+</html>
